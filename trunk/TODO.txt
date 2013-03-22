@@ -1,3 +1,1 @@
-Incorporate the one-step memory. i might be able to use the unconditional probabilities to compute the conditional probabilities.
-I think all I have to do is use p_a and p_b to get p_ab, etc, and use those
-to generate p(a,b) = p(AB)/p(A), etc. THIS DOES NOT WORK. This actually just gives me back the monad probabilities. 
+Check correlations between point n and point n-1 to verifiy that my memory is there.

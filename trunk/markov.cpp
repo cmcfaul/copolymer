@@ -26,8 +26,8 @@ int main()
     //calculate the probabilites from the input parameters
     p_a = (x + r1*x*x)/(r1*x*x + 2*x + r2);
     p_b = (x + r2)/(r1*x*x + 2*x + r2);
-    p_agb = 1/(1+r2);
-    p_bga = 1/(1+r1);
+    p_agb = 1/(1+r2/x);
+    p_bga = 1/(1+r1*x);
     p_aga = 1-p_bga;
     p_bgb = 1-p_agb;
     
