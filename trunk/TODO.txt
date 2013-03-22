@@ -1,0 +1,7 @@
+check the histograms of the simulations i've done; make sure the extermal compositions are not hitting the edges of possibility.
+
+My first pass is NOT a first-order markov; it is just a binomial with the probabilities calculated from the rr's. I probably want that for comparison to the proper markov.
+
+Incorporate the one-step memory. i might be able to use the unconditional probabilities to compute the conditional probabilities.
+I think all I have to do is use p_a and p_b to get p_ab, etc, and use those
+to generate p(a,b) = p(AB)/p(A), etc.
