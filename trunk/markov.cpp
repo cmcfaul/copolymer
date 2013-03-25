@@ -3,6 +3,8 @@
 #include <fstream>
 #include <cstdlib> // for rand() and srand()
 #include <ctime> // for time()
+#include <cstring>
+#include <cassert>
 
 using namespace std;
 
@@ -14,9 +16,11 @@ int main()
     float p_a, p_b; //single-monomer unconditional probabilities
     float p_aa, p_ab, p_ba, p_bb; //diad unconditional probabilities
     float p_aga, p_agb, p_bga, p_bgb; //conditional probabilities
-    float r1, r2, x;
+    float r1, r2, x; //input parameters
+    int aa, ab, ba, bb; //counters for each diad
+    int bad;
     ofstream myfile;
-    char* outfile;
+    string outfile;
 
     cout << "File name for output ";
     cin >> outfile;
@@ -32,41 +36,59 @@ int main()
     p_bgb = 1-p_agb;
     
     //write the header information
-    myfile.open(outfile);
+    myfile.open(outfile.c_str());
     myfile << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
     myfile << "p_a=" << p_a << " p_b=" << p_b << endl;
     myfile << "p_aga=" << p_aga << " p_agb=" << p_agb << " p_bga=" << p_bga << " p_bgb=" << p_bgb << endl;
     myfile << "[A]/[B] = " << x << endl;
     
+    //column titles
+    myfile << "a, aa, ab, ba, bb" << endl;;    
+    //Main body of the program
     for (int i=0; i<=chains; i++)
     {
-	int monomer = 0;
-	int monomer_a = 0;
+	    int monomer = 0;
+	    int monomer_a = 0;
+	    int monomer_b = 0;
+	    aa = ab = ba = bb = 0;
         for (int j=0; j<=length; ++j)
-	{
-//	    myfile << monomer << ", ";
-	    float k = float(rand())/RAND_MAX;
-	    if (monomer == 0 && k < p_agb)
-	    {
-     		monomer = 1;
-            monomer_a++;;
-	    }
-	    else if (monomer == 1 && k < p_aga)
-	    {
-		    monomer = 1;
-            monomer_a++;;
-	    }
-	    else
-	    {
-   		    monomer = 0;
+        {
+            bad = 0;
+	        float k = float(rand())/RAND_MAX;
+	        //0 is used to desginate monomer b, 1 means monomer a
+	        if (monomer == 0)
+               if (k < p_agb)
+               {
+     		         monomer = 1;
+                     monomer_a++;
+                     ba++;
+                     bad = 1;
+               } else
+               {
+                     monomer = 0;
+                     monomer_b++;
+                     bb++;
+                     bad = 1;
+               }
+	        else
+               if (k < p_aga)
+	           {
+                     monomer = 1;
+                     monomer_a++;
+                     aa++;
+                     bad = 1;
+               } else 
+	           {
+                     monomer = 0;
+   		             monomer_b++;
+   		             ab++;
+                     bad = 1;
+               }
+        assert(bad);       
         }
-
-//	myfile << monomer << endl;
-	}
-	myfile << monomer_a << endl;
+        myfile << monomer_a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << endl;
     }
     myfile.close();
-	
     return 0;
 }
 
