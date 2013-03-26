@@ -40,10 +40,9 @@ int main()
     myfile << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
     myfile << "p_a=" << p_a << " p_b=" << p_b << endl;
     myfile << "p_aga=" << p_aga << " p_agb=" << p_agb << " p_bga=" << p_bga << " p_bgb=" << p_bgb << endl;
-    myfile << "[A]/[B] = " << x << endl;
     
     //column titles
-    myfile << "a, aa, ab, ba, bb" << endl;;    
+    myfile << "chain #, a, aa, ab, ba, bb" << endl;;    
     //Main body of the program
     for (int i=0; i<=chains; i++)
     {
@@ -86,7 +85,7 @@ int main()
                }
         assert(bad);       
         }
-        myfile << monomer_a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << endl;
+        myfile << i << ", " << monomer_a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << endl;
     }
     myfile.close();
     return 0;

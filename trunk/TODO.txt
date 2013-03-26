@@ -1,1 +1,4 @@
-Check correlations between point n and point n-1 to verifiy that my memory is there.
+I'm doing this with replacement. But the w/o replacement problem is probably
+relevant for the actual reactions. How big a deal is that? Probably a big deal.
+
+
