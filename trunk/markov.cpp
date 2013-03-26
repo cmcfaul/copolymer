@@ -40,7 +40,7 @@ int main()
     
     //write the header information
     myfile.open(outfile.c_str());
-    myfile << "Created by Id:" << endl;
+    myfile << "Created by $Id:" << endl;
     myfile << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
     myfile << "p_a=" << p_a << " p_b=" << p_b << endl;
     myfile << "p_aga=" << p_aga << " p_agb=" << p_agb << " p_bga=" << p_bga << " p_bgb=" << p_bgb << endl;
