@@ -5,6 +5,7 @@
 #include <ctime> // for time()
 #include <cstring>
 #include <cassert>
+#include <cmath>
 
 using namespace std;
 
@@ -18,6 +19,8 @@ int main()
     float p_aga, p_agb, p_bga, p_bgb; //conditional probabilities
     float r1, r2, x; //input parameters
     int aa, ab, ba, bb; //counters for each diad
+    float a_mean, aa_mean, ab_mean, ba_mean, bb_mean;   
+    float a_var, aa_var, ab_var, ba_var, bb_var;
     int bad;
     ofstream myfile;
     string outfile;
@@ -42,8 +45,10 @@ int main()
     myfile << "p_aga=" << p_aga << " p_agb=" << p_agb << " p_bga=" << p_bga << " p_bgb=" << p_bgb << endl;
     
     //column titles
-    myfile << "chain #, a, aa, ab, ba, bb" << endl;;    
+    myfile << "chain #, a, aa, ab, ba, bb" << endl; 
     //Main body of the program
+    a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
+    a_var = aa_var = ab_var = ba_var = bb_var = 0;
     for (int i=0; i<=chains; i++)
     {
 	    int monomer = 0;
@@ -86,7 +91,15 @@ int main()
         assert(bad);       
         }
         myfile << i << ", " << monomer_a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << endl;
+        a_mean+=monomer_a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
+        a_var+=monomer_a*monomer_a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba;bb_var+=bb*bb; 
     }
+    a_mean /= chains; aa_mean /= chains; ab_mean /= chains; ba_mean /= chains; bb_mean /= chains;
+    a_var = a_var/chains - (a_mean*a_mean); aa_var = aa_var/chains - (aa_mean*aa_mean); ab_var = ab_var/chains - (ab_mean*ab_mean);
+    ba_var = ba_var/chains - (ba_mean*ba_mean); bb_var = bb_var/chains - (bb_mean*bb_mean);
+    myfile << "mean, " << a_mean << ", " << aa_mean << ", " << ab_mean << ", " << ba_mean << ", " << bb_mean << endl;
+    myfile << "std, " << sqrt(a_var) << ", " << sqrt(aa_var) << ", " << sqrt(ab_var) << ", " << sqrt(ba_var) << ", " << sqrt(bb_var) << endl;
+    
     myfile.close();
     return 0;
 }
