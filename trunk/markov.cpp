@@ -66,14 +66,12 @@ int main()
                {
      		         monomer = 1;
                      a++;
-                     a_left--;
                      ba++;
                      bad = 1;
                } else
                {
                      monomer = 0;
                      b++;
-                     b_left--;
                      bb++;
                      bad = 1;
                }
@@ -82,20 +80,18 @@ int main()
 	           {
                      monomer = 1;
                      a++;
-                     a_left--;
                      aa++;
                      bad = 1;
                } else 
 	           {
                      monomer = 0;
    		             b++;
-                     b_left--;
    		             ab++;
                      bad = 1;
                }
         assert(bad);       
         }
-        //running counts for the statistics
+        myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << endl;
         a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
         a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba;bb_var+=bb*bb; 
     }
