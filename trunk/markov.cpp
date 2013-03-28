@@ -48,11 +48,13 @@ int main()
     //Main body of the program
     a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
     a_var = aa_var = ab_var = ba_var = bb_var = 0;
+    int a_left = floor(chains*length*x/(x+1)); //=total monomers * fraction of a monomers
+    int b_left = floor(chains*length*1/(x+1)); //=total monomers * fraction of b monomers
     for (int i=0; i<=chains; i++)
     {
 	    int monomer = 0;
-	    int monomer_a = 0;
-	    int monomer_b = 0;
+	    int a = 0;
+	    int b = 0;
 	    aa = ab = ba = bb = 0;
         for (int j=0; j<=length; ++j)
         {
@@ -63,13 +65,15 @@ int main()
                if (k < p_agb)
                {
      		         monomer = 1;
-                     monomer_a++;
+                     a++;
+                     a_left--;
                      ba++;
                      bad = 1;
                } else
                {
                      monomer = 0;
-                     monomer_b++;
+                     b++;
+                     b_left--;
                      bb++;
                      bad = 1;
                }
@@ -77,21 +81,26 @@ int main()
                if (k < p_aga)
 	           {
                      monomer = 1;
-                     monomer_a++;
+                     a++;
+                     a_left--;
                      aa++;
                      bad = 1;
                } else 
 	           {
                      monomer = 0;
-   		             monomer_b++;
+   		             b++;
+                     b_left--;
    		             ab++;
                      bad = 1;
                }
         assert(bad);       
         }
-        a_mean+=monomer_a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
-        a_var+=monomer_a*monomer_a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba;bb_var+=bb*bb; 
+        //running counts for the statistics
+        a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
+        a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba;bb_var+=bb*bb; 
     }
+    
+    //compute statistics for the reaction
     a_mean /= chains; aa_mean /= chains; ab_mean /= chains; ba_mean /= chains; bb_mean /= chains;
     a_var = a_var/chains - (a_mean*a_mean); aa_var = aa_var/chains - (aa_mean*aa_mean); ab_var = ab_var/chains - (ab_mean*ab_mean);
     ba_var = ba_var/chains - (ba_mean*ba_mean); bb_var = bb_var/chains - (bb_mean*bb_mean);
