@@ -50,7 +50,7 @@ int main()
     myfile2 << "Created by $Id$" << endl;
     myfile2 << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
     //column titles
-    myfile << "chain #, a, aa, ab, ba, bb" << endl;
+    myfile << "chain #, a, aa, ab, ba, bb, a_left, b_left" << endl;
 
     
     //Main body of the program
@@ -58,15 +58,14 @@ int main()
     a_var = aa_var = ab_var = ba_var = bb_var = 0;
     int a_left = floor(chains*length*x/(x+1)); //=total monomers * fraction of a monomers
     int b_left = floor(chains*length*1/(x+1)); //=total monomers * fraction of b monomers
-    for (int i=0; i<=chains; i++)
+    for (int i=1; i<=chains; i++)
     {
 	    int monomer = 0;
 	    int a = 0;
 	    int b = 0;
 	    aa = ab = ba = bb = 0;
-        for (int j=0; j<=length; ++j)
+        for (int j=1; j<=length; ++j)
         {
-            bad = 0;
 	        float k = float(rand())/RAND_MAX;
 	        //0 is used to desginate monomer b, 1 means monomer a
 	        if (monomer == 0)
@@ -74,12 +73,14 @@ int main()
                {
      		         monomer = 1;
                      a++;
+                     a_left--;
                      ba++;
                      bad = 1;
                } else
                {
                      monomer = 0;
                      b++;
+                     b_left--;
                      bb++;
                      bad = 1;
                }
@@ -88,21 +89,49 @@ int main()
 	           {
                      monomer = 1;
                      a++;
+                     a_left--;
                      aa++;
                      bad = 1;
                } else 
 	           {
                      monomer = 0;
    		             b++;
+   		             b_left--;
    		             ab++;
                      bad = 1;
                }
-        assert(bad);       
-        }
-        myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << endl;
+        //update probabilities
+               if (a_left && b_left)
+               {
+                    x = a_left/b_left;
+                    p_agb = 1/(1+r2/x);
+                    p_bga = 1/(1+r1*x);
+                    p_aga = 1-p_bga;
+                    p_bgb = 1-p_agb;
+               }
+               else if (b_left == 0)
+               {
+                    p_agb = 1;
+                    p_bgb = 0;
+                    p_aga = 1-p_bga;
+                    p_bgb = 1-p_agb;
+               }
+               else if (a_left == 0)
+               {
+                    p_agb = 0;
+                    p_bga = 1;
+                    p_aga = 1-p_bga;
+                    p_bgb = 1-p_agb;
+               }
+               else 
+                    assert(1); //shouldn't get here
+        } //next monomer
+        myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << a_left << ", " << b_left<< endl;
         a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
         a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba; bb_var+=bb*bb; 
-    }
+    } //next chain
+    assert(a_left == 0);
+    assert(b_left == 0);
     
     //compute statistics for the reaction
     a_mean /= chains; aa_mean /= chains; ab_mean /= chains; ba_mean /= chains; bb_mean /= chains;
