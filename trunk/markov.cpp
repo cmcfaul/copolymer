@@ -21,7 +21,6 @@ int main()
     int aa, ab, ba, bb; //counters for each diad
     float a_mean, aa_mean, ab_mean, ba_mean, bb_mean;   
     float a_var, aa_var, ab_var, ba_var, bb_var;
-    int bad;
     ofstream myfile, myfile2;
     string outfile, statsfile;
 
@@ -68,68 +67,71 @@ int main()
         {
 	        float k = float(rand())/RAND_MAX;
 	        //0 is used to desginate monomer b, 1 means monomer a
-	        if (monomer == 0)
-               if (k < p_agb)
-               {
-     		         monomer = 1;
-                     a++;
-                     a_left--;
-                     ba++;
-                     bad = 1;
-               } else
-               {
-                     monomer = 0;
-                     b++;
-                     b_left--;
-                     bb++;
-                     bad = 1;
-               }
-	        else
-               if (k < p_aga)
-	           {
-                     monomer = 1;
-                     a++;
-                     a_left--;
-                     aa++;
-                     bad = 1;
-               } else 
-	           {
-                     monomer = 0;
-   		             b++;
-   		             b_left--;
-   		             ab++;
-                     bad = 1;
-               }
-        //update probabilities
-               if (a_left && b_left)
-               {
-                    x = a_left/b_left;
-                    p_agb = 1/(1+r2/x);
-                    p_bga = 1/(1+r1*x);
-                    p_aga = 1-p_bga;
-                    p_bgb = 1-p_agb;
-               }
-               else if (b_left == 0)
-               {
-                    p_agb = 1;
-                    p_bgb = 0;
-                    p_aga = 1-p_bga;
-                    p_bgb = 1-p_agb;
-               }
-               else if (a_left == 0)
-               {
-                    p_agb = 0;
-                    p_bga = 1;
-                    p_aga = 1-p_bga;
-                    p_bgb = 1-p_agb;
-               }
-               else 
-                    assert(1); //shouldn't get here
+	        if (monomer == 0 && k <= p_agb)
+            {
+     		   monomer = 1;
+               a++;
+               a_left--;
+               ba++;
+            }
+            else if (monomer == 0 && k > p_agb)
+            {
+               monomer = 0;
+               b++;
+               b_left--;
+               bb++;
+            }
+	        else if (monomer == 1 && k <= p_aga)
+            {
+               monomer = 1;
+               a++;
+               a_left--;
+               aa++;
+            }
+            else if (monomer == 1 && k > p_aga)
+            {
+               monomer = 0;
+   		       b++;
+   		       b_left--;
+   		       ab++;
+            }
+            else 
+                 assert (1); //shouldn't get here
+            //update probabilities
+            if (a_left == 0 && b_left != 0)
+            {
+               p_aga = 0;
+               p_agb = 0;
+               p_bgb = 1;
+               p_bga = 1;
+            }
+            else if (a_left != 0 && b_left == 0)
+            {
+               p_aga = 1;
+               p_agb = 1;
+               p_bgb = 0;
+               p_bgb = 0;
+            }
+            else if (a_left == 0 && b_left == 0)
+            {
+               //we should be on the last loop
+               assert (j == length);
+               assert (i == chains);   
+            }
+            else //both a_left and b_left are greater than zero
+            {
+               x = a_left/b_left;
+               p_agb = 1/(1+r2/x);
+               p_bga = 1/(1+r1*x);
+               p_aga = 1-p_bga;
+               p_bgb = 1-p_agb;
+            }
         } //next monomer
         myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << a_left << ", " << b_left<< endl;
         a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
         a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba; bb_var+=bb*bb; 
     } //next chain
+    myfile << p_aga << ", " << p_agb << ", " << p_bga << ", " << p_bgb << endl;
     assert(a_left == 0);
     assert(b_left == 0);
     
