@@ -19,6 +19,7 @@ int main()
     float p_aga, p_agb, p_bga, p_bgb; //conditional probabilities
     float r1, r2, x; //input parameters
     int aa, ab, ba, bb; //counters for each diad
+    int state; //state of the chain-end
     float a_mean, aa_mean, ab_mean, ba_mean, bb_mean;   
     float a_var, aa_var, ab_var, ba_var, bb_var;
     ofstream myfile, myfile2;
@@ -36,6 +37,10 @@ int main()
     p_bga = 1/(1+r1*x);
     p_aga = 1-p_bga;
     p_bgb = 1-p_agb;
+    p_aa = p_aga*p_a;
+    p_bb = p_bgb*p_b;
+    p_ab = p_bga*p_a;
+    p_ba = p_agb*p_b;
     
     //write the header information
     outfile += ".dat";
@@ -46,57 +51,66 @@ int main()
     myfile << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
     myfile << "p_a=" << p_a << " p_b=" << p_b << endl;
     myfile << "p_aga=" << p_aga << " p_agb=" << p_agb << " p_bga=" << p_bga << " p_bgb=" << p_bgb << endl;
+    myfile << "p_aa=" << p_aa << " p_bb=" << p_bb << " p_ab=" << p_ab << " p_ba=" << p_ba << endl;
     myfile2 << "Created by $Id$" << endl;
     myfile2 << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
     //column titles
     myfile << "chain #, a, aa, ab, ba, bb, a_left, b_left" << endl;
 
-    
     //Main body of the program
     a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
     a_var = aa_var = ab_var = ba_var = bb_var = 0;
-    int a_left = floor(chains*length*x/(x+1)); //=total monomers * fraction of a monomers
-    int b_left = floor(chains*length*1/(x+1)); //=total monomers * fraction of b monomers
+    int a_left = int(floor(chains*length*x/(x+1))); //=total monomers * fraction of a monomers
+    int b_left = int(floor(chains*length*1/(x+1))); //=total monomers * fraction of b monomers
     for (int i=1; i<=chains; i++)
     {
-	    int monomer = 0;
+        //start chain using initial probabilities
+        float k = float(rand())/RAND_MAX;
+        if (k < p_a*RAND_MAX)
+           state = 1;
+        else 
+           state = 0;
 	    int a = 0;
 	    int b = 0;
 	    aa = ab = ba = bb = 0;
         for (int j=1; j<=length; ++j)
         {
-	        float k = float(rand())/RAND_MAX;
-	        //0 is used to desginate monomer b, 1 means monomer a
-	        if (monomer == 0 && k <= p_agb)
-            {
-     		   monomer = 1;
-               a++;
-               a_left--;
-               ba++;
-            }
-            else if (monomer == 0 && k > p_agb)
-            {
-               monomer = 0;
-               b++;
-               b_left--;
-               bb++;
-            }
-	        else if (monomer == 1 && k <= p_aga)
-            {
-               monomer = 1;
-               a++;
-               a_left--;
-               aa++;
-            }
-            else if (monomer == 1 && k > p_aga)
-            {
-               monomer = 0;
-   		       b++;
-   		       b_left--;
-   		       ab++;
-            }
-            else 
-                 assert (1); //shouldn't get here
+	        k = float(rand())/RAND_MAX;
+	        switch (state)
+	        {
+ 	   		    case 1:
+           			 if (k <= p_aga)
+                 	 {
+   		          	   	 state = 1;
+                    	 a++;
+                    	 a_left--;
+                    	 aa++;
+            		 }
+                 	 else
+                 	 {
+                      	 state = 0;
+                    	 b++;
+                    	 b_left--;
+                    	 ab++;
+            		 }
+            		 break;
+        		 case 0:
+                 	  if (k <= p_agb)
+                 	  {
+                       	 state = 1;
+                    	 a++;
+                    	 a_left--;
+                    	 ba++;
+  		 		 	  }
+                 	  else
+                 	  {
+                 	     state = 0;
+   		            	 b++;
+   		            	 b_left--;
+        	  			 bb++;
+	   	   	          }
+	   	   	          break;
+  		    }
             //update probabilities
             if (a_left == 0 && b_left != 0)
             {
@@ -115,8 +129,8 @@ int main()
             else if (a_left == 0 && b_left == 0)
             {
                //we should be on the last loop
-               assert (j == length);
                assert (i == chains);   
+   			   assert (j == length);
             }
             else //both a_left and b_left are greater than zero
             {
@@ -127,11 +141,10 @@ int main()
                p_bgb = 1-p_agb;
             }
         } //next monomer
-        myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << a_left << ", " << b_left<< endl;
+        myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << a_left << ", " << b_left << endl;
         a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
         a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba; bb_var+=bb*bb; 
     } //next chain
-    myfile << p_aga << ", " << p_agb << ", " << p_bga << ", " << p_bgb << endl;
     assert(a_left == 0);
     assert(b_left == 0);
     
@@ -139,6 +152,7 @@ int main()
     a_mean /= chains; aa_mean /= chains; ab_mean /= chains; ba_mean /= chains; bb_mean /= chains;
     a_var = a_var/chains - (a_mean*a_mean); aa_var = aa_var/chains - (aa_mean*aa_mean); ab_var = ab_var/chains - (ab_mean*ab_mean);
     ba_var = ba_var/chains - (ba_mean*ba_mean); bb_var = bb_var/chains - (bb_mean*bb_mean);
+    myfile2 << "statistic, a, aa, ab, ba, bb" << endl;
     myfile2 << "mean, " << a_mean << ", " << aa_mean << ", " << ab_mean << ", " << ba_mean << ", " << bb_mean << endl;
     myfile2 << "std, " << sqrt(a_var) << ", " << sqrt(aa_var) << ", " << sqrt(ab_var) << ", " << sqrt(ba_var) << ", " << sqrt(bb_var) << endl;
     
@@ -146,4 +160,3 @@ int main()
     myfile2.close();
     return 0;
 }
-

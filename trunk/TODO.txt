@@ -1,4 +1,9 @@
-I'm doing this with replacement. But the w/o replacement problem is probably
-relevant for the actual reactions. How big a deal is that? Probably a big deal.
+Probably need to break things up a bit.
+Make a probabilities class, with an update method. 
 
+allow me to choose at run-time if replacement. 
 
+Current simulates a single reaction. Add more than one reaction.
+
+ab and ba are perfectly correlated because rand() isn't good enough for this application. 
+apparently, mersenne twister will work well.
