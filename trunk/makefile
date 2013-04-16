@@ -1,4 +1,4 @@
-#$Id: $
+#$Id$
 
 markov: markov.cpp
 	g++ markov.cpp -o markov
