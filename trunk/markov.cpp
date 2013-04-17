@@ -55,13 +55,13 @@ int main()
   myfile2 << "Created by $Id$" << endl;
   myfile2 << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
   //column titles
-  myfile << "chain #, a, aa, ab, ba, bb, a_left, b_left" << endl;
+  myfile << "chain #, a, aa, ab, ba, bb, p_a, p_b, a_left, b_left" << endl;
 
   //Main body of the program
   a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
   a_var = aa_var = ab_var = ba_var = bb_var = 0;
   int a_left = int(floor(chains*length*x/(x+1))); //=total monomers * fraction of a monomers
-  int b_left = int(floor(chains*length*1/(x+1))); //=total monomers * fraction of b monomers
+  int b_left = int(ceil(chains*length*1/(x+1))); //=total monomers * fraction of b monomers
   for (int i=1; i<=chains; i++)
   {
 	  //start chain using initial probabilities
@@ -128,7 +128,7 @@ int main()
 			  p_b = 1-p_a;
 		  }
 	  } //next monomer
-	  myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << a_left << ", " << b_left << endl;
+	  myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << p_a << ", " << p_b << ", " << a_left << ", " << b_left << endl;
 	  a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
 	  a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba; bb_var+=bb*bb; 
   } //next chain

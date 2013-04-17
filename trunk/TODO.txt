@@ -5,5 +5,9 @@ allow me to choose at run-time if replacement.
 
 Current simulates a single reaction. Add more than one reaction.
 
-ab and ba are perfectly correlated because rand() isn't good enough for this application. 
-apparently, mersenne twister will work well.
+As of revision 20, the obvious outstanding problem is that the probabilities 
+seem to change in steps, rather than continuously. this might be a precision
+problem.
+
+Figure out a way to script several runs. 
+
