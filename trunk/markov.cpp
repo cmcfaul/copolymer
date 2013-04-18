@@ -12,12 +12,12 @@ using namespace std;
 int main()
 {
   srand(time(0)); // generate seed for random number
-  int chains = 10000; // number of polymer chains
-  int length = 1000; //length of each polymer chain
-  float p_a, p_b; //single-monomer unconditional probabilities
+  int chains = 10001; // number of polymer chains
+  int length = 1011; //length of each polymer chain
+  double p_a, p_b; //single-monomer unconditional probabilities
   float p_aa, p_ab, p_ba, p_bb; //diad unconditional probabilities
   float p_aga, p_agb, p_bga, p_bgb; //conditional probabilities
-  float r1, r2, x; //input parameters
+  double r1, r2, x; //input parameters
   int aa, ab, ba, bb; //counters for each diad
   int state; //state of the chain-end
   float a_mean, aa_mean, ab_mean, ba_mean, bb_mean;   
@@ -60,8 +60,8 @@ int main()
   //Main body of the program
   a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
   a_var = aa_var = ab_var = ba_var = bb_var = 0;
-  int a_left = int(floor(chains*length*x/(x+1))); //=total monomers * fraction of a monomers
-  int b_left = int(ceil(chains*length*1/(x+1))); //=total monomers * fraction of b monomers
+  long a_left = int(floor(chains*length*x/(x+1))); //=total monomers * fraction of a monomers
+  long b_left = int(ceil(chains*length*1/(x+1))); //=total monomers * fraction of b monomers
   for (int i=1; i<=chains; i++)
   {
 	  //start chain using initial probabilities
