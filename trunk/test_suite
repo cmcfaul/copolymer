@@ -1,0 +1,7 @@
+#$Id$
+echo "random 1 1 1" | markov
+echo "alternating 0 0 1" | markov
+echo "block 1e6 1e6 1" | markov
+echo "weird 1 2 3" | markov
+make dos
+
