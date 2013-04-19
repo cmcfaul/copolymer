@@ -14,10 +14,10 @@ int main()
   srand(time(0)); // generate seed for random number
   int chains = 10001; // number of polymer chains
   int length = 1011; //length of each polymer chain
-  double p_a, p_b; //single-monomer unconditional probabilities
+  float p_a, p_b; //single-monomer unconditional probabilities
   float p_aa, p_ab, p_ba, p_bb; //diad unconditional probabilities
   float p_aga, p_agb, p_bga, p_bgb; //conditional probabilities
-  double r1, r2, x; //input parameters
+  float r1, r2, x; //input parameters
   int aa, ab, ba, bb; //counters for each diad
   int state; //state of the chain-end
   float a_mean, aa_mean, ab_mean, ba_mean, bb_mean;   
@@ -31,10 +31,10 @@ int main()
   cin >> r1 >> r2 >> x;
 
   //calculate the probabilites from the input parameters
-  p_a = (x + r1*x*x)/(r1*x*x + 2*x + r2);
-  p_b = (x + r2)/(r1*x*x + 2*x + r2);
-  p_agb = 1/(1+r2/x);
-  p_bga = 1/(1+r1*x);
+  p_a = (x + r1*x*x)/(r1*x*x + 2.0*x + r2);
+  p_b = (x + r2)/(r1*x*x + 2.0*x + r2);
+  p_agb = 1/(1.0+r2/x);
+  p_bga = 1/(1.0+r1*x);
   p_aga = 1-p_bga;
   p_bgb = 1-p_agb;
   p_aa = p_aga*p_a;
@@ -60,8 +60,8 @@ int main()
   //Main body of the program
   a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
   a_var = aa_var = ab_var = ba_var = bb_var = 0;
-  long a_left = int(floor(chains*length*x/(x+1))); //=total monomers * fraction of a monomers
-  long b_left = int(ceil(chains*length*1/(x+1))); //=total monomers * fraction of b monomers
+  int a_left = int(floor(chains*length*x/(x+1.0))); //=total monomers * fraction of a monomers
+  int b_left = int(ceil(chains*length*1.0/(x+1.0))); //=total monomers * fraction of b monomers
   for (int i=1; i<=chains; i++)
   {
 	  //start chain using initial probabilities
@@ -117,15 +117,15 @@ int main()
 		  }
 		  else if (state)//a_left, b_left > 0, state = 1 
 		  {
-			  x = a_left/b_left;
-			  p_b = 1/(1+r1*x);
-			  p_a = 1-p_b;
+			  x = float(a_left)/b_left;
+			  p_b = 1.0/(1.0+r1*x);
+			  p_a = 1.0-p_b;
 		  }
 		  else //a_left, b_left > 0, state = 0
 		  {
-			  x = a_left/b_left;
-			  p_a = 1/(1+r2/x);
-			  p_b = 1-p_a;
+			  x = float(a_left)/b_left;
+			  p_a = 1.0/(1.0+r2/x);
+			  p_b = 1.0-p_a;
 		  }
 	  } //next monomer
 	  myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << p_a << ", " << p_b << ", " << a_left << ", " << b_left << endl;

@@ -5,14 +5,6 @@ allow me to choose at run-time if replacement.
 
 Current simulates a single reaction. Add more than one reaction.
 
-As of revision 20, the obvious outstanding problem is that the probabilities 
-seem to change in steps, rather than continuously. This could partially be 
-aliasing between the chain probability and the chain number, but that's not
-the whole story. For 1 2 3, for example, p_a seems to only take the values 
-3/5, 4/6, 5/7, ... n/(n+2). Maybe some LCM/GCD interaction.
-
-
 Ultimate goal for validation: reproduce figures 5.1 and 5.2 on p 126 of 
 Cowis and Arrighi
 
-The alternating polymer sometimes fails the assert at the end. 
