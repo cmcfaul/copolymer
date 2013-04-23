@@ -12,8 +12,8 @@ using namespace std;
 int main()
 {
   srand(time(0)); // generate seed for random number
-  int chains = 10001; // number of polymer chains
-  int length = 1011; //length of each polymer chain
+  int chains = 100000; // number of polymer chains
+  int length = 1000; //length of each polymer chain
   float p_a, p_b; //single-monomer unconditional probabilities
   float p_aa, p_ab, p_ba, p_bb; //diad unconditional probabilities
   float p_aga, p_agb, p_bga, p_bgb; //conditional probabilities
@@ -55,13 +55,15 @@ int main()
   myfile2 << "Created by $Id$" << endl;
   myfile2 << "r1=" << r1 << " r2=" << r2 << " [A]/[B]=" << x << endl;
   //column titles
-  myfile << "chain #, a, aa, ab, ba, bb, p_a, p_b, a_left, b_left" << endl;
+  myfile << "f_total, F_inst_a, F_inst_b, f_a, f_b, x" << endl;
 
   //Main body of the program
   a_mean = aa_mean = ab_mean = ba_mean = bb_mean = 0;   
   a_var = aa_var = ab_var = ba_var = bb_var = 0;
   int a_left = int(floor(chains*length*x/(x+1.0))); //=total monomers * fraction of a monomers
   int b_left = int(ceil(chains*length*1.0/(x+1.0))); //=total monomers * fraction of b monomers
+  int a0 = a_left;
+  int b0 = b_left;
   for (int i=1; i<=chains; i++)
   {
 	  //start chain using initial probabilities
@@ -128,7 +130,7 @@ int main()
 			  p_b = 1.0-p_a;
 		  }
 	  } //next monomer
-	  myfile << i << ", " << a << ", " << aa << ", " << ab << ", " << ba << ", " << bb << ", " << p_a << ", " << p_b << ", " << a_left << ", " << b_left << endl;
+	  myfile << 1.0-float(a_left+b_left)/(a0+b0) << ", " << float(a)/length << ", " << float(b)/length << ", " << 1.0-(float(a_left)/float(a0)) << ", " << 1.0-float(b_left)/(b0) << ", " << x << endl;
 	  a_mean+=a; aa_mean+=aa; ab_mean+=ab; ba_mean+=ba; bb_mean+=bb;
 	  a_var+=a*a; aa_var+=aa*aa; ab_var+=ab*ab; ba_var+=ba*ba; bb_var+=bb*bb; 
   } //next chain

@@ -8,3 +8,8 @@ Current simulates a single reaction. Add more than one reaction.
 Ultimate goal for validation: reproduce figures 5.1 and 5.2 on p 126 of 
 Cowis and Arrighi
 
+Convert raw integers into fractions F,inst, f, etc. f_total.
+
+Allow CHAINS and LENGTH to change w/out recompiling
+
+allow chains to have different lengths; then end chains randomly.
