@@ -1,13 +1,13 @@
 #$Id$
-echo "random 1.0 1.0 3.0" | markov
+echo "random 1.0 1.0 3.0" | deterministic
 echo 
-echo "alternating 0.0 0.0 3.0" | markov
+echo "alternating 0.0 0.0 3.0" | deterministic
 echo 
-echo "block 1.0e7 1.0e7 3.0" | markov
+echo "block 1.0e7 1.0e7 3.0" | deterministic
 echo 
-echo "weird 0.9 1.5 1.7" | markov
+echo "weird 0.9 1.5 1.7" | deterministic
 echo 
-echo "am-vb 0.2 9.0 9.0" | markov
+echo "am-vb 0.2 9.0 9.0" | deterministic
 echo 
 make dos
 

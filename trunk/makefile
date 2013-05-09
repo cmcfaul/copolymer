@@ -1,6 +1,9 @@
 #$Id$
 .PHONY: dos 
 
+det: deterministic.cpp
+	g++ deterministic.cpp -o deterministic
+
 markov: markov.cpp
 	g++ markov.cpp -o markov
 
@@ -8,8 +11,8 @@ markov: markov.cpp
 dos: 
 	unix2dos *.dat
 
-test: markov.cpp test_suite
-	g++ markov.cpp -o markov
+test: deterministic.cpp test_suite
+	g++ deterministic.cpp -o deterministic
 	./test_suite
 	touch test
 
