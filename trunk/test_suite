@@ -3,7 +3,7 @@ echo "random 1.0 1.0 3.0" | deterministic
 echo 
 echo "alternating 0.0 0.0 3.0" | deterministic
 echo 
-echo "block 1.0e7 1.0e7 3.0" | deterministic
+echo "block 1.0e3 1.0e3 3.0" | deterministic
 echo 
 echo "weird 0.9 1.5 1.7" | deterministic
 echo 
