@@ -27,8 +27,8 @@ int main()
   cin >> r[0] >> r[1] >> x;
 
   //convert the input ratio into monomer compositions
-  m[0] = m[0] = x/(1.0+x);
-  m[1] = m[1] = 1.0/(1.0+x);
+  m[0] = m0[0] = x/(1.0+x);
+  m[1] = m0[1] = 1.0/(1.0+x);
 
   outfile += ".dat";
   myfile.open(outfile.c_str());
